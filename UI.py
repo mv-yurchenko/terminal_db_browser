@@ -7,14 +7,17 @@ from terminaltables import AsciiTable
 
 class UI:
 
-    def __init__(self, db_object):
+    numerated_tabels = dict()
+
+    def __init__(self, db_object: SQLite):
         self.db_object = db_object
-        self.tables = db_object.
+        self.tables = self.db_object.db_data.keys()
+        self.numerate_tabels()
 
     def print_header(self):
         self.clear_screen()
         print("Current time: ", strftime("%Y-%m-%d %H:%M:%S", gmtime()))
-        print("Database Path: " + self.db_object.db_data.path_to_db)
+        print("Database Path: " + self.db_object.path)
 
     @staticmethod
     def clear_screen():
@@ -32,11 +35,16 @@ class UI:
 
         table_number = 0
 
-        current_table = self.db_object.get_table_by_number(table_number)
+        current_table = self.numerated_tabels[table_number]
 
         while True:
 
             self.print_table(current_table)
+            input()
+
+    def numerate_tabels(self): 
+        for num, table in enumerate(self.tables): 
+            self.numerated_tabels[num] = table
 
     def print_table(self, table_name: str):
         self.print_header()
@@ -46,9 +54,16 @@ class UI:
 
         print("Table name: " + table_name)
         columns = self.db_object.db_data[table_name].columns
-        table_data.append(columns)
 
-        for row_data in self.db_object.db_data[table_data].rows:
+        for row_data in self.db_object.db_data[table_name].rows_data:
+
             table_data.append(row_data)
         table = AsciiTable(table_data)
+
         print(table.table)
+
+if __name__ == "__main__":
+    path = "sqlite_example.db"
+    a = SQLite(path)
+    ui = UI(a)
+    ui.inf_loop_function()
