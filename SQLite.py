@@ -1,12 +1,7 @@
 import sqlite3
 from os.path import isfile
+from TableData import TableData
 
-
-class TableData: 
-
-    def __init__(self, columns: list, rows_data: list):
-        self.rows_data = rows_data
-        self.columns = columns
 
 class SQLite: 
 
@@ -15,7 +10,6 @@ class SQLite:
 
         # Open DB and Initialize connection and cursor 
         self.update_db_connection_and_data()
-        
 
     def open_db(self):
         
@@ -83,8 +77,7 @@ class SQLite:
         self.tables_list = self.get_tables_list()
 
         self.db_data = dict()   # dict : {'table_name' : table_data_object}
-    
-        
+
         for table in self.tables_list:
             data = self.get_data_from_table(table)
             columns = self.get_column_names(table)
