@@ -3,6 +3,7 @@ from time import gmtime, strftime
 from sys import platform
 import os
 from terminaltables import AsciiTable
+from itertools import cycle
 
 
 class UI:
@@ -11,8 +12,12 @@ class UI:
 
     def __init__(self, db_object: SQLite):
         self.db_object = db_object
-        self.tables = self.db_object.db_data.keys()
+        self.tables = list(self.db_object.db_data.keys())
         self.numerate_tabels()
+        self.ui_commands = {
+            "NEXT" : self.next_table_command, 
+            "PREV" : self.prev_table_command
+        }
 
     def print_header(self):
         self.clear_screen()
@@ -33,18 +38,32 @@ class UI:
 
     def inf_loop_function(self):
 
-        table_number = 0
-
-        current_table = self.numerated_tabels[table_number]
+        self.current_table = self.tables[0]
 
         while True:
 
-            self.print_table(current_table)
-            input()
+            self.print_table(self.current_table)
+            
+            command = self.input_command()
+
+            command_type, command = self.get_command_type_and_command_text(command)
+
+            if command_type == "UI_COMMAND" and command in self.ui_commands.keys(): 
+                self.execute_ui_command(command.upper())
+
+            elif command_type == "SQL_COMMAND": 
+                # TODO execute_sql_command function
+                pass
 
     def numerate_tabels(self): 
         for num, table in enumerate(self.tables): 
             self.numerated_tabels[num] = table
+
+    @staticmethod
+    def color_str_to_red(string: str) -> str: 
+        R__BEG = '\033[91m'
+        R_END = '\033[0m'
+        return R__BEG + string + R_END 
 
     def print_table(self, table_name: str):
         self.print_header()
@@ -53,15 +72,66 @@ class UI:
         table_data = list()
 
         print("Table name: " + table_name)
-        columns = self.db_object.db_data[table_name].columns
 
+        # Columns is the header of the table
+        table_data.append(self.db_object.db_data[table_name].columns)
+
+        # Add every row in the table
         for row_data in self.db_object.db_data[table_name].rows_data:
-
             table_data.append(row_data)
+
         table = AsciiTable(table_data)
 
         print(table.table)
 
+    def get_command_type_and_command_text(self, command: str) -> str: 
+        # Check for first symbol (UI commands starts with /)
+
+        # If command is empty returns ValueError
+        if not command: 
+            return ValueError
+
+        if command[0] == "/": 
+            return "UI_COMMAND", command[1:].upper()
+
+        else: return "SQL_COMMAND", command
+    # SQL COMMANDS
+    def execute_sql_command(self, command):
+        # 1) Process command
+        # 2) send command to sql as string
+        self.process_sql_command(command)
+        
+    @staticmethod
+    def process_sql_command(command: str):
+        # replace all ',' with ' '
+        command.replace(',', ' ')
+
+
+        print(command)
+
+
+
+
+    # UI COMMANDS 
+    def execute_ui_command(self, command): 
+        self.ui_commands[command]()
+    
+    def next_table_command(self): 
+        current_index = self.tables.index(self.current_table)
+
+        if current_index == len(self.tables) - 1: 
+            self.current_table = self.tables[0]
+        else: 
+            self.current_table = self.tables[current_index + 1]
+    
+    def prev_table_command(self): 
+        current_index = self.tables.index(self.current_table)
+
+        if current_index == 0: 
+            self.current_table = self.tables[len(self.tables) - 1]
+        else: 
+            self.current_table = self.tables[current_index - 1]
+    
 if __name__ == "__main__":
     path = "sqlite_example.db"
     a = SQLite(path)
