@@ -1,7 +1,15 @@
 1) Add support for this SQL commands @high 
-☐ SELECT - extracts data from a database
-☐ UPDATE - updates data in a database
-☐ DELETE - deletes data from a database
+☐ SELECT - extracts data from a database{ @started(19-01-30 12:22)
+    1) Поиск имен колонок и названия таблицы ( НЕ ЗАБЫТЬ ПРО * ) @critical 
+    2) Выполнение запросы в SQL (ответ в виде данных строк) 
+    3) Формирование таблицы на вывод 
+}
+☐ UPDATE - updates data in a database{
+     1) поиск названия таблицы
+     2) Выполнение запроса
+}
+☐ DELETE - deletes data from a database{
+}
 ☐ INSERT INTO - inserts new data into a database
 ☐ CREATE DATABASE - creates a new database
 ☐ ALTER DATABASE - modifies a database
@@ -10,7 +18,8 @@
 ☐ DROP TABLE - deletes a table
 ☐ CREATE INDEX - creates an index (search key)
 ☐ DROP INDEX - deletes an index
-
+3) Autocomplete: 
+    ☐ using file @started(19-01-30 12:41)
 2) Tests for functions: @high
     ☐ UI.process_sql_command
     ☐ 
