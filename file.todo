@@ -18,9 +18,13 @@
 ☐ DROP TABLE - deletes a table
 ☐ CREATE INDEX - creates an index (search key)
 ☐ DROP INDEX - deletes an index
-3) Autocomplete: 
+2) Autocomplete: 
     Все названия записать по которому производить атвтокомплит(изменить функцию ввода) 
-    ☐ using file @started(19-01-30 12:41)
-2) Tests for functions: @high
+    ✔ using file @started(19-01-30 12:41) @done(19-01-30 23:40) @lasted(10h59m39s)
+
+3) Tests for functions: @high
     ☐ UI.process_sql_command
     ☐ 
+
+4) @critical : 
+    ☐ Проверка на пустую строку при вводе 
