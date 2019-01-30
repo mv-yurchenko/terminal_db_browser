@@ -4,6 +4,7 @@ from sys import platform
 import os
 from terminaltables import AsciiTable
 from itertools import cycle
+import readline
 
 
 class UI:
@@ -33,8 +34,21 @@ class UI:
         else:
             os.system("clear")
 
-    @staticmethod
-    def input_command():
+    
+    def input_command(self):
+        # Bind TAB for autocomplete
+        readline.parse_and_bind("tab: complete")
+
+        # Define compiter function 
+        def completer(text, cmd_index):
+            possible_commands = [cmd for cmd in self.commands_and_names if cmd.startswith(text)]
+            if cmd_index < len(possible_commands):
+                return possible_commands[cmd_index]
+            else:
+                return None
+
+        readline.set_completer(completer)
+
         command = input("INPUT COMMAND: ")
         return command
 
