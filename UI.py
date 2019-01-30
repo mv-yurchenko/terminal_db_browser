@@ -61,16 +61,15 @@ class UI:
             self.print_table(self.current_table)
             
             command = self.input_command()
-            print(self.commands_and_names)
-            input()
+
             command_type, command = self.get_command_type_and_command_text(command)
 
             if command_type == "UI_COMMAND" and command in self.ui_commands.keys(): 
                 self.execute_ui_command(command.upper())
 
             elif command_type == "SQL_COMMAND": 
-                # TODO execute_sql_command function
-                pass
+                self.execute_sql_command(command)
+                
 
     def numerate_tabels(self): 
         for num, table in enumerate(self.tables): 
@@ -94,8 +93,7 @@ class UI:
         table_data.append(self.db_object.db_data[table_name].columns)
 
         # Add every row in the table
-        for row_data in self.db_object.db_data[table_name].rows_data:
-            table_data.append(row_data)
+        table_data +=  self.db_object.db_data[table_name].rows_data
 
         table = AsciiTable(table_data)
 
@@ -124,22 +122,57 @@ class UI:
         # Items from sublists to main list
         self.commands_and_names = [item for sublist in self.commands_and_names for item in sublist]
 
+        # Add SQL Commands to autocomplete list
+        sql_commands = ["SELECT", "INSERT", "from"]
+        
+        self.commands_and_names += sql_commands
+
     # SQL COMMANDS
     def execute_sql_command(self, command):
         # 1) Process command
         # 2) send command to sql as string
-        self.process_sql_command(command)
+        columns_names = self.process_sql_command_and_get_columns_names(command)
         
+        answer = self.db_object.execute_request(command)
+
+        self.output_select_answer(columns_names, answer)
+        print("\n answer from SQL: ")
+        print(answer)
+        input()
+
     @staticmethod
-    def process_sql_command(command: str):
+    def output_select_answer(columns_names, rows_data): 
+        print("\nResult: \n")
+        table_data = [ ]
+        # Columns is the header of the table
+        table_data.append(columns_names)
+
+        # Add every row in the table
+        table_data += rows_data
+
+        table = AsciiTable(table_data)
+
+        print(table.table)
+
+    def process_sql_command_and_get_columns_names(self, command: str):
         # replace all ',' with ' '
-        command.replace(',', ' ')
+        command = command.replace(',', ' ')
+        # Remove ;
+        if command[-1] == ";": 
+            command = command[:-1]
+        
+        command = command.split()
 
+        from_index = command.index("from") or command.index("FROM")
 
-        print(command)
+        # table name aftwer from 
+        table_name = command[from_index + 1]
 
-
-
+        if command[1] == "*": 
+            columns_names = self.db_object.db_data[table_name].columns
+        else:   
+            columns_names = command[1: from_index]
+        return columns_names
 
     # UI COMMANDS 
     def execute_ui_command(self, command): 
