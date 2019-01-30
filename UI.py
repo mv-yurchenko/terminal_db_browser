@@ -163,7 +163,12 @@ class UI:
         
         command = command.split()
 
-        from_index = command.index("from") or command.index("FROM")
+
+        from_index = 2
+        
+        for word in command: 
+            if word == "from" or word == "FROM": 
+                from_index = command.index(word)
 
         # table name aftwer from 
         table_name = command[from_index + 1]
