@@ -19,6 +19,7 @@
 ☐ CREATE INDEX - creates an index (search key)
 ☐ DROP INDEX - deletes an index
 3) Autocomplete: 
+    Все названия записать по которому производить атвтокомплит(изменить функцию ввода) 
     ☐ using file @started(19-01-30 12:41)
 2) Tests for functions: @high
     ☐ UI.process_sql_command

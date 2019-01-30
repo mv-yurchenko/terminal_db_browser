@@ -9,6 +9,7 @@ from itertools import cycle
 class UI:
 
     numerated_tabels = dict()
+    commands_and_names = list()
 
     def __init__(self, db_object: SQLite):
         self.db_object = db_object
@@ -18,6 +19,7 @@ class UI:
             "NEXT" : self.next_table_command, 
             "PREV" : self.prev_table_command
         }
+        self.generate_list_for_autocomplete()
 
     def print_header(self):
         self.clear_screen()
@@ -45,7 +47,8 @@ class UI:
             self.print_table(self.current_table)
             
             command = self.input_command()
-
+            print(self.commands_and_names)
+            input()
             command_type, command = self.get_command_type_and_command_text(command)
 
             if command_type == "UI_COMMAND" and command in self.ui_commands.keys(): 
@@ -95,6 +98,18 @@ class UI:
             return "UI_COMMAND", command[1:].upper()
 
         else: return "SQL_COMMAND", command
+
+    def generate_list_for_autocomplete(self): 
+        # Add table names 
+        self.commands_and_names.append(self.tables)
+
+        # Add columns names
+        for table in self.db_object.db_data.values():
+            self.commands_and_names.append(table.columns)
+        
+        # Items from sublists to main list
+        self.commands_and_names = [item for sublist in self.commands_and_names for item in sublist]
+
     # SQL COMMANDS
     def execute_sql_command(self, command):
         # 1) Process command
