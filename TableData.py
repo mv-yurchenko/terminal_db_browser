@@ -1,5 +1,4 @@
-class TableData: 
+from collections import namedtuple
 
-    def __init__(self, columns: list, rows_data: list):
-        self.rows_data = rows_data
-        self.columns = columns
+
+TableData = namedtuple("TableData", ['columns', 'rows_data'])
