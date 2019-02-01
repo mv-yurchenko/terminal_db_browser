@@ -1,7 +1,4 @@
-from dataclasses import dataclass
+from collections import namedtuple
 
 
-@dataclass
-class TableData: 
-    columns : list
-    rows_data: list
+TableData = namedtuple("TableData", ['columns', 'rows_data'])
