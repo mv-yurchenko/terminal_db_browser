@@ -1,5 +1,7 @@
-class TableData: 
+from dataclasses import dataclass
 
-    def __init__(self, columns: list, rows_data: list):
-        self.rows_data = rows_data
-        self.columns = columns
+
+@dataclass
+class TableData: 
+    columns : list
+    rows_data: list
