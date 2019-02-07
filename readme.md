@@ -13,7 +13,7 @@ $ pip3 install -r requirments.txt
 ## Usage
 
 ```bash
-$ python3 sqlite_example.db
+$ python3 db_browser.py sqlite_example.db
 ```
 
 ## DataBases
