@@ -57,19 +57,31 @@ class UI:
         self.current_table = self.tables[0]
 
         while True:
-
-            self.print_table(self.current_table)
             
-            command = self.input_command()
+            try: 
 
-            command_type, command = self.get_command_type_and_command_text(command)
-
-            if command_type == "UI_COMMAND" and command in self.ui_commands.keys(): 
-                self.execute_ui_command(command.upper())
-
-            elif command_type == "SQL_COMMAND": 
-                self.execute_sql_command(command)
+                self.print_table(self.current_table)
                 
+                command = self.input_command()
+
+                command_type, command = self.get_command_type_and_command_text(command)
+
+                if command_type == "UI_COMMAND" and command in self.ui_commands.keys(): 
+                    self.execute_ui_command(command.upper())
+
+                elif command_type == "SQL_COMMAND": 
+                    self.execute_sql_command(command)
+            
+            except: 
+                
+                self._print_error_msg()
+                input()
+
+    def _print_error_msg(self): 
+        print("\n\n\n\n\n")
+        print("-------------------------")
+        print(self.color_str_to_red("RuntimeError exception"))
+        print("Email about error")
 
     def numerate_tabels(self): 
         for num, table in enumerate(self.tables): 
