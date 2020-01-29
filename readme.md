@@ -23,6 +23,5 @@ $ python3 db_browser.py sqlite_example.db
 
 ### Will be supported: 
 
-* MySQL 
 * ClickHouse
-* Porstage SQLa
+* Porstage SQL
